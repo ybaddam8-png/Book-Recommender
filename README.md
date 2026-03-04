@@ -1,3 +1,4 @@
+
 # BookBot AI 📚
 
 An intelligent book discovery and recommendation system powered by AI. BookBot helps users find books based on their preferences, search by authors, and get personalized recommendations using semantic search and RAG (Retrieval-Augmented Generation) techniques.
