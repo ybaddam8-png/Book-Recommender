@@ -1,38 +1,131 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>BookBot AI</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+```
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+```
+
 </head>
+
 <body>
 
-<div class="background-decoration"></div>
+<div class="app-layout">
 
+```
+<!-- Sidebar -->
+<div class="sidebar">
+
+    <div class="sidebar-header">
+        <div class="logo">
+            📚 BookBot
+        </div>
+
+        <button class="new-chat-btn" onclick="newChat()">
+            <i class="fa-solid fa-plus"></i> New Chat
+        </button>
+    </div>
+
+    <div class="chat-history" id="chat-history">
+        <p class="history-title">Recent Chats</p>
+    </div>
+
+    <div class="sidebar-footer">
+        <button onclick="toggleTheme()" class="theme-toggle">
+            🌙 Toggle Theme
+        </button>
+    </div>
+
+</div>
+
+
+<!-- Main Chat Area -->
 <div class="chat-container">
+
+    <!-- Header -->
     <div class="header">
         <div class="header-content">
-            <div class="logo">
-                <span class="logo-icon">📚</span>
+            <span class="logo-icon">📚</span>
+            <div>
+                <h1>BookBot AI</h1>
+                <p>Intelligent Book Discovery</p>
             </div>
-            <h1>BookBot AI</h1>
-            <p>Intelligent Book Discovery</p>
         </div>
     </div>
 
+
+    <!-- Chat Messages -->
     <div id="chat-box"></div>
 
+
+    <!-- Suggested Prompts -->
+    <div class="suggestions" id="suggestions">
+
+        <button onclick="askSuggestion('Recommend fantasy books')">
+            Fantasy Books
+        </button>
+
+        <button onclick="askSuggestion('Best science fiction novels')">
+            Sci-Fi Books
+        </button>
+
+        <button onclick="askSuggestion('Books similar to Harry Potter')">
+            Books like Harry Potter
+        </button>
+
+        <button onclick="askSuggestion('Top mystery novels')">
+            Mystery Books
+        </button>
+
+    </div>
+
+
+    <!-- Input Area -->
     <div class="input-area">
-        <input type="text" id="user-input" placeholder="Ask me about books, authors, or get recommendations...">
+
+        <input
+            type="text"
+            id="user-input"
+            placeholder="Ask me about books, authors, or get recommendations..."
+            onkeypress="if(event.key === 'Enter') sendMessage()"
+        >
+
         <button onclick="sendMessage()" class="send-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+            <svg width="20" height="20" viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2">
+
                 <line x1="22" y1="2" x2="11" y2="13"></line>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+
             </svg>
+
         </button>
+
     </div>
+
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Powered by RAG AI • Book Recommendations Engine</p>
+    </div>
+
+</div>
+```
+
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
