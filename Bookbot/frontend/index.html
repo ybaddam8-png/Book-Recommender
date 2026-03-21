@@ -1,131 +1,182 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>BookBot AI</title>
-    <link rel="stylesheet" href="style.css">
-
-```
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-
-<!-- Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-```
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Librarian — BookBot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<div class="app-layout">
+  <!-- ░░ Ambient background ░░ -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="bg-grain"></div>
+  </div>
 
-```
-<!-- Sidebar -->
-<div class="sidebar">
-
-    <div class="sidebar-header">
-        <div class="logo">
-            📚 BookBot
+  <!-- ░░ Book detail overlay ░░ -->
+  <div class="book-overlay" id="book-overlay" style="display:none;">
+    <div class="overlay-backdrop" id="overlay-backdrop"></div>
+    <div class="overlay-panel" id="overlay-panel">
+      <button class="overlay-close" id="overlay-close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <div class="overlay-content">
+        <div class="overlay-left">
+          <div class="overlay-cover-wrap" id="overlay-cover"></div>
+          <div class="overlay-meta" id="overlay-meta"></div>
         </div>
-
-        <button class="new-chat-btn" onclick="newChat()">
-            <i class="fa-solid fa-plus"></i> New Chat
-        </button>
-    </div>
-
-    <div class="chat-history" id="chat-history">
-        <p class="history-title">Recent Chats</p>
-    </div>
-
-    <div class="sidebar-footer">
-        <button onclick="toggleTheme()" class="theme-toggle">
-            🌙 Toggle Theme
-        </button>
-    </div>
-
-</div>
-
-
-<!-- Main Chat Area -->
-<div class="chat-container">
-
-    <!-- Header -->
-    <div class="header">
-        <div class="header-content">
-            <span class="logo-icon">📚</span>
-            <div>
-                <h1>BookBot AI</h1>
-                <p>Intelligent Book Discovery</p>
-            </div>
+        <div class="overlay-right">
+          <div class="overlay-genre" id="overlay-genre"></div>
+          <h2 class="overlay-title" id="overlay-title"></h2>
+          <p class="overlay-author" id="overlay-author"></p>
+          <div class="overlay-stars" id="overlay-stars"></div>
+          <div class="overlay-desc-label">About this book</div>
+          <p class="overlay-desc" id="overlay-desc"></p>
+          <div class="overlay-actions">
+            <button class="overlay-save-btn" id="overlay-save-btn">
+              <span class="material-symbols-outlined">bookmark</span>
+              Save to Library
+            </button>
+            <button class="overlay-explain-btn" id="overlay-explain-btn">
+              <span class="material-symbols-outlined">auto_stories</span>
+              What's this about?
+            </button>
+          </div>
+          <div class="overlay-explain-panel" id="overlay-explain-panel" style="display:none;"></div>
         </div>
+      </div>
     </div>
+  </div>
 
+  <!-- ░░ Archive / Library panel ░░ -->
+  <div class="archive-overlay" id="archive-overlay" style="display:none;">
+    <div class="archive-backdrop" id="archive-backdrop"></div>
+    <aside class="archive-panel">
 
-    <!-- Chat Messages -->
-    <div id="chat-box"></div>
-
-
-    <!-- Suggested Prompts -->
-    <div class="suggestions" id="suggestions">
-
-        <button onclick="askSuggestion('Recommend fantasy books')">
-            Fantasy Books
+      <div class="archive-header">
+        <div class="archive-header-title">
+          <span class="material-symbols-outlined">history_edu</span>
+          Archive
+        </div>
+        <button class="archive-close" id="archive-close">
+          <span class="material-symbols-outlined">close</span>
         </button>
+      </div>
 
-        <button onclick="askSuggestion('Best science fiction novels')">
-            Sci-Fi Books
+      <!-- Tabs -->
+      <div class="archive-tabs">
+        <button class="archive-tab active" data-tab="history">
+          <span class="material-symbols-outlined">chat</span>
+          History
         </button>
-
-        <button onclick="askSuggestion('Books similar to Harry Potter')">
-            Books like Harry Potter
+        <button class="archive-tab" data-tab="saved">
+          <span class="material-symbols-outlined">bookmark</span>
+          Saved
+          <span class="saved-count-badge" id="saved-count-badge" style="display:none;"></span>
         </button>
+      </div>
 
-        <button onclick="askSuggestion('Top mystery novels')">
-            Mystery Books
+      <!-- History tab -->
+      <div class="archive-tab-content" id="tab-history">
+        <div class="archive-search-wrap">
+          <span class="material-symbols-outlined">search</span>
+          <input id="archive-search" placeholder="Search past queries…" autocomplete="off" />
+        </div>
+        <div class="archive-list" id="archive-list"></div>
+      </div>
+
+      <!-- Saved tab -->
+      <div class="archive-tab-content" id="tab-saved" style="display:none;">
+        <div class="archive-search-wrap">
+          <span class="material-symbols-outlined">search</span>
+          <input id="saved-search" placeholder="Search saved books…" autocomplete="off" />
+        </div>
+        <div class="archive-list" id="saved-list"></div>
+      </div>
+
+      <div class="archive-footer">
+        <button class="archive-clear-btn" id="archive-clear-btn">
+          <span class="material-symbols-outlined">delete_sweep</span>
+          <span id="clear-btn-label">Clear history</span>
         </button>
+      </div>
 
-    </div>
+    </aside>
+  </div>
 
+  <!-- ░░ App shell ░░ -->
+  <div class="app">
 
-    <!-- Input Area -->
-    <div class="input-area">
-
-        <input
-            type="text"
-            id="user-input"
-            placeholder="Ask me about books, authors, or get recommendations..."
-            onkeypress="if(event.key === 'Enter') sendMessage()"
-        >
-
-        <button onclick="sendMessage()" class="send-btn">
-
-            <svg width="20" height="20" viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2">
-
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-
-            </svg>
-
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-mark">✦</span>
+        <div>
+          <div class="logo-text">The Librarian</div>
+          <div class="logo-sub">Your Private Study</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" id="nav-discover">
+          <span class="material-symbols-outlined">explore</span>
+          Discover
         </button>
+        <button class="nav-item" id="nav-archive">
+          <span class="material-symbols-outlined">history_edu</span>
+          Archive
+        </button>
+        <button class="nav-item" id="nav-saved">
+          <span class="material-symbols-outlined">bookmark</span>
+          Saved
+          <span class="nav-saved-badge" id="nav-saved-badge" style="display:none;"></span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-text">Powered by<br/><strong>Semantic AI</strong></div>
+      </div>
+    </aside>
 
-    </div>
+    <!-- Main chat area -->
+    <main class="chat-panel">
 
+      <header class="topbar">
+        <div class="topbar-title">
+          <span class="topbar-icon">✦</span> The Librarian
+          <span class="topbar-badge">AI</span>
+        </div>
+        <div class="topbar-status">
+          <span class="status-dot"></span> Ready
+        </div>
+      </header>
 
-    <!-- Footer -->
-    <div class="footer">
-        <p>Powered by RAG AI • Book Recommendations Engine</p>
-    </div>
+      <div class="chat-box" id="chat-box">
+        <div class="hero" id="hero">
+          <div class="hero-eyebrow">Your personal librarian</div>
+          <h1 class="hero-title">What shall we<br/><em>read next?</em></h1>
+          <p class="hero-sub">Ask me anything — genres, moods, authors, or "books like…"</p>
+          <div class="suggestions" id="suggestions"></div>
+        </div>
+      </div>
 
-</div>
-```
+      <div class="input-bar">
+        <div class="input-wrap">
+          <textarea id="user-input" placeholder="Ask about a book, author, or genre…" rows="1" autocomplete="off" spellcheck="false"></textarea>
+          <button id="send-btn" class="send-btn" aria-label="Send">
+            <span class="material-symbols-outlined">send</span>
+          </button>
+        </div>
+        <div class="input-hint">Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line</div>
+      </div>
 
-</div>
+    </main>
+  </div>
 
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
